@@ -1,0 +1,73 @@
+<form [formGroup]="blogForm"
+      [class.displayOff]="formGuardada"
+      class="example-form">
+  
+  <mat-form-field #categoryInput
+                  appearance="outline"
+                  class="example-full-width">
+    <input type="text"
+           placeholder="Pick category"
+           matInput
+           formControlName="category"
+           [matAutocomplete]="auto">
+    <mat-autocomplete #auto="matAutocomplete">
+      <mat-option *ngFor="let option of options" [value]="option">
+        {{option}}
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+
+
+  <mat-form-field appearance="outline" class="example-full-width">
+    <input type="text"
+            placeholder="Pick subcategory"
+            matInput
+            formControlName="subcategory"
+            [matAutocomplete]="auto2">
+    <mat-autocomplete #auto2="matAutocomplete">
+
+      <mat-option 
+            *ngFor="let subcategory of subcategoryOptions(blogForm.value.category)"
+            [value]="subcategory">
+        {{subcategory}}
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+
+  <button type="submit"
+          [class.displayOff]="formGuardada"
+          mat-button
+          mat-raised-button
+          (click)="guardarCambios()"
+          [disabled]="!blogForm.valid"
+          color="primary">Guardar</button>
+</form>
+
+{{ (formGuardada)
+    ? ('Categoria seleccionada: ' + blogForm.value.category)
+    : '' }}
+<br>
+{{ (formGuardada)
+        ? ('Subcategoria seleccionada: ' + blogForm.value.subcategory)
+        : '' }}
+
+
+<br><br>
+<button type="submit"
+            [class.displayOff]="!formGuardada"
+            mat-button
+            mat-raised-button
+            (click)="reset()"
+            color="warn">Reset</button> 
+
+&nbsp;
+
+<button type="button" (click)="log= !log">Show/Hide Log</button>
+
+
+<ng-container #log *ngIf="!log">
+  <pre>
+    {{ blogForm.value | json}}
+  </pre>
+</ng-container>
+
